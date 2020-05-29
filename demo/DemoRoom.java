@@ -3,8 +3,6 @@ package Project.demo;
 import Project.controller.RoomController;
 import Project.model.Filter;
 
-import java.io.File;
-import java.util.Arrays;
 
 public class DemoRoom {
     public static void main(String[] args) throws Exception {
