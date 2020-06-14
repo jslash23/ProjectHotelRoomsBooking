@@ -1,11 +1,9 @@
 package Project.repository;
 
 import Project.model.*;
-
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class OrderRepository {
     public static void bookRoom(long roomId, long userId, String dateFrom, String dateTo, String order) throws InterruptedException {
@@ -117,10 +115,6 @@ public class OrderRepository {
         }
     }
 
-    private static void deleteOrder(String order) {
-        //сотрем наш заказ
-
-    }
 }
 
 

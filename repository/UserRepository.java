@@ -28,19 +28,6 @@ public class UserRepository {
 
       int write =  writeToUserDb(readFromFile(userPath), user, userPath);//Маппинг запроса комнат в объект User c валидацией
 
-
-        // Map<Integer, User> usMap = new HashMap<>();
-
-//айдишник должен генерится с уникальным номером, он не должен повторяться
-
-      /*  long id = (CreateId(0, 200));
-
-            String fileToPath = "C:/Users/Пользователь/Desktop/Project/RoomsDb.txt";
-            writeToFile(fileToPath, readFromFile(usMap));
-
-            System.out.println(usMap);
-
-            return user;*/
     }
 
     private static StringBuffer readFromFile(String path) throws Exception {//
@@ -124,10 +111,6 @@ public class UserRepository {
                 i++;
                         }
 
-
-
-
-
         }catch (Exception e) {
             System.err.println("Fild id contains invalid data");
         }
@@ -178,32 +161,6 @@ public class UserRepository {
         }
     }
 
-
-    private static StringBuffer readFromFile(Map<Integer, User> usMap) {
-        StringBuffer res = new StringBuffer();
-
-        try {
-            res.append(usMap);
-        } catch (Exception e) {
-            System.out.println("Reading from file " + res + " failed");
-        } finally {
-            //IOUtils.closeQuietly(res);
-        }
-        return res;
-    }
-
-    private static void writeToFile(String path, StringBuffer contentToWrite) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
-            bufferedWriter.append(contentToWrite);
-
-        } catch (FileNotFoundException e) {
-            System.err.println("File does not exist");
-        } catch (IOException e) {
-            System.out.println("Reading from file " + path + " failed");
-        }
-    }
-
-
     private static Integer CreateId(Integer min, Integer max) {
         int diff = max - min;
         Random random = new Random();
@@ -213,24 +170,4 @@ public class UserRepository {
     }
 }
 
-/* public StringBuffer changeId (StringBuffer contentFile){
-        StringBuffer newBuf = new StringBuffer();
-        String newString = contentFile.toString();
-        String[] nC = newString.trim().split(",");
 
-        String s = nC[0];
-           try {
-                long idNew = Long.parseLong(s);
-                idNew = (CreateId(0, 200));
-            } catch (NumberFormatException e) {
-                System.out.println(s + " is not a valid number.");
-            }
-
-        String newConvString = nC.toString();
-          // Тут нужно преобразовать в полноценный объект
-        newBuf.append(newConvString);
-
-        //long number = new Long(s).longValue();
-        //long n = Long.parseLong(s);
-        return newBuf;
-    }*/
