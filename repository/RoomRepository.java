@@ -93,9 +93,9 @@ public class RoomRepository {
 
 
     //тут нужно использовать мап иначе затирается предыдущий объект хостел
-    private static StringBuffer readFromFile(String path) throws Exception {//
+    private static StringBuilder readFromFile(String path) throws Exception {//
 
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -110,7 +110,10 @@ public class RoomRepository {
         return res;
     }
 
-    private static ArrayList<Room> writeToRooms(StringBuffer contentToWrite) {
+
+    //Нужно перевести входящий объект в строку  и записать в файл
+
+    private static ArrayList<Room> writeToRooms(StringBuilder contentToWrite) {
         ArrayList<Room> rooms = new ArrayList<>();
 
         Room room1 = new Room(0, 0, 0, false, false,
@@ -122,41 +125,21 @@ public class RoomRepository {
         rooms.add(room1);
         rooms.add(room2);
 
-        String convString = contentToWrite.toString();
+        String convString = contentToWrite.toString();//это входящий объект
+
+
         String[] lines = convString.trim().split(",");
         int i = 0;
 
         for (int j = 0; j < rooms.size() - 1; j++) {
 
-            //validate fild id проверка на целые числа
-            try {
-                if (!lines[i].isEmpty() && lines[i].trim().matches("^[0-9]+$")) {
                     rooms.get(j).setId((Integer.parseInt(lines[i])));
-                }
-            } catch (Exception e) {
-                System.err.println("Fild id contains invalid data");
-            }
             i++;
 
-            //validate fild numberOfGuests проверка на целые числа
-            try {
-                if (!lines[i].isEmpty() && lines[i].trim().matches("^[0-9]+$")) {
                     rooms.get(j).setNumbersOfGuests((Integer.parseInt(lines[i].trim())));
-                }
-            } catch (Exception e) {
-                System.err.println("Fild numberOfGuests contains invalid data");
-            }
             i++;
 
-
-            //validate fild price проверка на целые числа и числа с плавающей точкой
-            try {//"^[\\-?\\d+(\\.\\d{0,})?\n ]+$"
-                if (!lines[i].isEmpty() && lines[i].trim().matches("^[\\-?\\d+(\\.\\d{0,})? ]+$")) {
                     rooms.get(j).setPrice(Double.parseDouble(lines[i].trim()));
-                }
-            } catch (Exception e) {
-                System.err.println("Fild price contains invalid data");
-            }
             i++;
 
             //validate fild breakfastIncluded проверка значения false или true
@@ -183,25 +166,10 @@ public class RoomRepository {
             }
             i++;
 
-            //validate fild dateAvailableFrom проверка значения даты Дата в формате DD/MM/YYYY:/  HH:MM:SS !!!!!!!!!!!!!!!!!!!!
-            try {
-                if (!lines[i].isEmpty()/* &&
-                    lines[i].matches("^[a-zA-Z0-9-:]+$")*/) {
-
                     rooms.get(j).setDateAvableFrom(lines[i].trim());
-                }
-            } catch (Exception e) {
-                System.err.println("Fild dateAvailableFrom contains invalid data");
-            }
             i++;
 
-            //validate fild hotel проверка на целые числа типа long
-
-                if (!lines[i].isEmpty() && lines[i].trim().matches("^[0-9]+$")) {
-
                     rooms.get(j).getHotel().setId(Long.parseLong(lines[i].trim()));
-                }
-
             i++;
 
         }
@@ -209,7 +177,7 @@ public class RoomRepository {
     }
 
     //Почему программа заменяет файлы в колекции АрейЛист HotelMap?
-    private static Filter writeToFilter(StringBuffer contentToWrite) throws Exception {
+    private static Filter writeToFilter(StringBuilder contentToWrite) throws Exception {
 
         String convString = contentToWrite.toString();
         String[] lines = convString.trim().split(",");
