@@ -1,5 +1,6 @@
 package Project.service;
 
+import Project.model.UserType;
 import Project.repository.OrderRepository;
 
 import java.time.LocalDateTime;
@@ -8,21 +9,34 @@ import java.util.Date;
 public class OrderService {
     private OrderRepository orderRepository = new OrderRepository();
 
-    public static void bookRoom(long roomId, long userId, String dateFrom, String dateTo, String order) throws Exception {
-        //if (ValidateroomId(roomId) && ValidateuserId(userId)) {
-            OrderRepository.bookRoom(roomId,userId,dateFrom,dateTo,order);
-       // }
-        //throw new Exception("this fild can't be null!");
+    public static void bookRoom(long roomId, long userId, String dateFrom, String dateTo, String order, UserType usType) throws Exception {
 
-    }
-    public static void cancelReservation(long roomId, long userId,String order) throws Exception{
-        OrderRepository.cancelReservation ( roomId, userId,order) ;
+
+            if (usType.equals(UserType.ADMIN)) {
+                OrderRepository.bookRoom(roomId, userId, dateFrom, dateTo, order);
+            }
+        else  {
+            System.err.println("You havn't rights for modify repository");
+        }
     }
 
-    private static boolean ValidateroomId(long roomId){
+    public static void cancelReservation(long roomId, long userId, String order, UserType usType) throws Exception {
+
+
+            if (usType.equals(UserType.ADMIN)) {
+                OrderRepository.cancelReservation(roomId, userId, order);
+            }
+        else  {
+            System.err.println("You havn't rights for modify repository");
+        }
+    }
+
+
+    private static boolean ValidateroomId(long roomId) {
         return true;
     }
-    private static boolean ValidateuserId(long userId){
+
+    private static boolean ValidateuserId(long userId) {
         return true;
     }
 }

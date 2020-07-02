@@ -4,7 +4,7 @@ import Project.model.Room;
 import Project.model.User;
 import Project.model.UserType;
 import Project.repository.UserRepository;
-import Project.service.exceptions.BadRequestException;
+import Project.exceptions.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.List;

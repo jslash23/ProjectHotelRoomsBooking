@@ -1,6 +1,8 @@
 package Project.service;
 
 import Project.model.Hotel;
+import Project.model.User;
+import Project.model.UserType;
 import Project.repository.HotelRepository;
 
 import java.util.ArrayList;
@@ -49,5 +51,26 @@ public class HotelService   {
             return true;
         }
         return false;
+    }
+    public void addHotel(Hotel hotel, String path, UserType userType) throws Exception{
+        //если юзер у нас является админом то мы выполняем добавление комнаты,
+        //иначе не добавляем
+
+            if (userType.equals(UserType.ADMIN)) {
+                HotelRepository.addHotel(hotel, path, userType);
+            }
+        else  {
+            System.err.println("You havn't rights for modify repository");
+        }
+    }
+
+    public void deleteHotel(long hotelId, String pathHotels, UserType usType) throws  Exception{
+
+            if (usType.equals(UserType.ADMIN)) {
+                HotelRepository.deleteHotel(hotelId, pathHotels, usType);
+            }
+         else {
+                System.err.println("You havn't rights for modify repository");
+            }
     }
 }

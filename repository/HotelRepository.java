@@ -1,10 +1,10 @@
 package Project.repository;
 
 import Project.model.Hotel;
+import Project.model.User;
+import Project.model.UserType;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -148,6 +148,128 @@ for (int k = 0; k < 2  ; k++) {//у нас 2-ве записи в таблице
         }
         return false;
     }
+
+    public  static  void addHotel(Hotel hotel, String path, UserType userType) throws Exception{
+        //запишем отели в репозиторий
+        //применим try с ресурсами
+
+        //1.преобразуем входные данные объекта Hotel в стринг
+        //сгенерируем новый айдишник
+        //2.запишем наш стринг в файл HotelDb.txt
+
+        //StringBuffer res = new StringBuffer();
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(path, true))) {
+
+            //Сгенерируем новый айдишник и запишем его в StringBuffer а
+            // StringBuffer запишется в hotelDb.txt
+
+            //Room room1 = new Room(0,1,100, true, true, "02.05.2020",
+            //kievPlaza);
+
+            try {
+                //сгенерируем айдишник и запишем его в файл
+                long id = (HotelRepository.CreateId(0, 200));
+                br.append(Long.toString(id));//Hotel id
+                br.append(", ");
+
+                br.write(hotel.getName());// Hotel name
+                br.append(", ");
+
+                br.write(String.valueOf(hotel.getCountry()));//Hotel country
+                br.append(", ");
+
+                br.append(String.valueOf(hotel.getCity()));//Hotel city
+                br.append(", ");
+
+                br.append(String.valueOf(hotel.getStreet()));//Hotel street
+                br.append(", ");
+
+                br.append("\n");
+
+
+            } catch (Exception e) {
+                System.err.println("Can't write to file");
+            }
+            System.out.println("New hotels was added");
+        }
+
+    }
+
+
+    public static void deleteHotel(long hotelId, String pathHotels, UserType usType) throws Exception {
+        delHotel(hotelId, pathHotels, usType);
+    }
+
+    private static void delHotel(long hotelId, String pathHotels, UserType usType) throws Exception {
+        //замапим данные из файла HotelDb.txt
+        //в них найдем отели по id, И  удалим  эти отели из файла HotelDb.txt
+
+        //1.Считаем строку из текстового файла нашей БД (HotelDb.txt)
+        //2.Замапим данные в объект Hotel
+        //3.Сравним полученные данные с входными данными (long roomId)
+        //если они сходятся то удалим нужную строку из БД
+        //иначе выведем эксепшн такой комнаты нет
+        //
+
+
+        //найдем наши комнаты по ай ди
+
+        writeToHotel(readFromFile(pathHotels), hotelId, pathHotels);
+    }
+    private static void writeToHotel(StringBuffer contentToWrite, long hotelId, String pathHotels) throws Exception {
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(pathHotels, false))) {//append
+
+
+            String convString = contentToWrite.toString();
+            String[] linesJ = convString.trim().split("\n");
+            String[] lines = convString.trim().split(",");
+            System.out.println(lines.length);
+            String hId = (Long.toString(hotelId));
+            int i = 0;
+
+            System.out.println(linesJ.length);
+            for (int j = 0; j < linesJ.length;) {
+                while (i < lines.length) {//предохранитель от переполнения массива i
+                    if ((!lines[i].isEmpty() && !lines[i].trim().equals(hId))) {
+                        i = writeNugnieHotelsToDb(br, lines, i, j);
+                        br.append("\n");
+                    } else {
+                        i = i + 5;
+                    }
+                    j++;
+                }
+            }
+            System.out.println("Hotels were canceled");
+        }
+    }
+
+
+    private static int writeNugnieHotelsToDb(BufferedWriter br, String[] lines, int i, int
+    j) throws Exception {
+        //Room room1 = new Room(0,1,100, true, true, "02.05.2020", kievPlaza);
+        br.append(lines[i].trim());//Hotel id
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//Hotel name
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//Hotel city
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//Hotel country
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//Hotel street
+        br.append(", ");
+        i++;
+
+        return i;
+    }
+
 }
 
 

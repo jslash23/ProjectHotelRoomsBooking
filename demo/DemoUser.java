@@ -8,7 +8,7 @@ public class DemoUser {
 
     public static void main(String[] args)throws Exception{
 
-        User newUser = new User(0,"Max","123","Ukraine", UserType.USER,false);
+        User newUser = new User(0,"Max","123","Ukraine", UserType.USER);
         String userPath = "C:/Users/Пользователь/Desktop/Project/UserDb.txt";
 
        /*  private long id;

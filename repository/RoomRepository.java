@@ -1,13 +1,8 @@
 package Project.repository;
 
-import Project.model.Filter;
-import Project.model.Hotel;
-import Project.model.Room;
+import Project.model.*;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -72,7 +67,6 @@ public class RoomRepository {
 
     private static boolean compareRoomsWithFilter(Room room, Filter filter) {
 
-
         Integer guests = room.getNumbersOfGuests();
         Double price = room.getPrice();
         boolean breakfast = room.isBreakfastIncluded();
@@ -93,9 +87,9 @@ public class RoomRepository {
 
 
     //тут нужно использовать мап иначе затирается предыдущий объект хостел
-    private static StringBuilder readFromFile(String path) throws Exception {//
+    private static StringBuffer readFromFile(String path) throws Exception {//
 
-        StringBuilder res = new StringBuilder();
+        StringBuffer res = new StringBuffer();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -113,33 +107,33 @@ public class RoomRepository {
 
     //Нужно перевести входящий объект в строку  и записать в файл
 
-    private static ArrayList<Room> writeToRooms(StringBuilder contentToWrite) {
+    private static ArrayList<Room> writeToRooms(StringBuffer contentToWrite) {
         ArrayList<Room> rooms = new ArrayList<>();
 
         Room room1 = new Room(0, 0, 0, false, false,
-                null,new Hotel(0,"","","","") );
+                null, new Hotel(0, "", "", "", ""));
 
         Room room2 = new Room(0, 0, 0, false, false,
-                null, new Hotel(0,"","","",""));
+                null, new Hotel(0, "", "", "", ""));
 
         rooms.add(room1);
         rooms.add(room2);
 
         String convString = contentToWrite.toString();//это входящий объект
 
-
         String[] lines = convString.trim().split(",");
         int i = 0;
 
         for (int j = 0; j < rooms.size() - 1; j++) {
+            long id = (UserRepository.CreateId(0, 200));
 
-                    rooms.get(j).setId((Integer.parseInt(lines[i])));
+            rooms.get(j).setId(Long.parseLong(lines[i].trim()));
             i++;
 
-                    rooms.get(j).setNumbersOfGuests((Integer.parseInt(lines[i].trim())));
+            rooms.get(j).setNumbersOfGuests((Integer.parseInt(lines[i].trim())));
             i++;
 
-                    rooms.get(j).setPrice(Double.parseDouble(lines[i].trim()));
+            rooms.get(j).setPrice(Double.parseDouble(lines[i].trim()));
             i++;
 
             //validate fild breakfastIncluded проверка значения false или true
@@ -166,10 +160,10 @@ public class RoomRepository {
             }
             i++;
 
-                    rooms.get(j).setDateAvableFrom(lines[i].trim());
+            rooms.get(j).setDateAvableFrom(lines[i].trim());
             i++;
 
-                    rooms.get(j).getHotel().setId(Long.parseLong(lines[i].trim()));
+            rooms.get(j).getHotel().setId(Long.parseLong(lines[i].trim()));
             i++;
 
         }
@@ -177,7 +171,7 @@ public class RoomRepository {
     }
 
     //Почему программа заменяет файлы в колекции АрейЛист HotelMap?
-    private static Filter writeToFilter(StringBuilder contentToWrite) throws Exception {
+    private static Filter writeToFilter(StringBuffer contentToWrite) throws Exception {
 
         String convString = contentToWrite.toString();
         String[] lines = convString.trim().split(",");
@@ -260,5 +254,148 @@ public class RoomRepository {
             System.err.println("Fild city contains invalid data");
         }
         return filter;
+    }
+
+    // method for add rooms if user is admin
+    public static void addRoom(Room room, String pathRooms, UserType userType) throws Exception {
+
+
+        //запишем комнаты в репозиторий
+        //применим try с ресурсами
+
+        //1.преобразуем входные данные объекта Room в стринг
+        //сгенерируем новый айдишник
+        //2.запишем наш стринг в файл RoomDb.txt
+
+        //StringBuffer res = new StringBuffer();
+       try (BufferedWriter br = new BufferedWriter(new FileWriter(pathRooms, true))) {
+
+            //Сгенерируем новый айдишник и запишем его в StringBuffer а
+            // StringBuffer запишется в userDb.txt
+
+            //Room room1 = new Room(0,1,100, true, true, "02.05.2020",
+            //kievPlaza);
+
+            try {
+                //сгенерируем айдишник и запишем его в файл
+                long id = (UserRepository.CreateId(0, 200));
+                br.append(Long.toString(id));//запишем новый id
+                br.append(", ");
+
+                br.append(Integer.toString(room.getNumbersOfGuests()));
+                br.append(", ");
+
+                br.append(String.valueOf(room.getPrice()));
+                br.append(", ");
+
+                br.write(String.valueOf(room.isBreakfastIncluded()));
+                br.append(", ");
+
+                br.append(String.valueOf(room.isPetsAllowed()));
+                br.append(", ");
+
+
+                br.append(room.getDateAvableFrom());
+                br.append(", ");
+
+                br.append(Long.toString(room.getHotel().getId()));
+                br.append(", ");
+                br.append("\n");
+
+
+            } catch (Exception e) {
+                System.err.println("Can't write to file");
+            }
+            System.out.println("New room was added");
+
+        }
+    }
+
+
+
+    public static void deleteRoom(long roomId, String path, UserType usType) throws Exception {
+        delRoom(roomId, path, usType);
+    }
+
+
+    private static void delRoom(long roomId, String path, UserType userType) throws Exception {
+
+        //замапим данные из файла RoomDb.txt
+        //в них найдем комнаты по id, И  удалим  эти комнаты из файла RoomDb.txt
+
+        //1.Считаем строку из текстового файла нашей БД (RoomDb.txt)
+        //2.Замапим данные в объект Room
+        //3.Сравним полученные данные с входными данными (long roomId)
+        //если они сходятся то удалим нужную строку из БД
+        //иначе выведем эксепшн такой комнаты нет
+        //
+
+
+        //найдем наши комнаты по ай ди
+
+
+        writeToRoom(readFromFile(path), roomId, path);
+    }
+
+
+
+    private static void writeToRoom(StringBuffer contentToWrite, long roomId, String roomPath) throws Exception {
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(roomPath, false))) {//append
+
+
+            String convString = contentToWrite.toString();
+            String[] linesJ = convString.trim().split("\n");
+            String[] lines = convString.trim().split(",");
+            String rId = (Long.toString(roomId));
+
+            int i = 0;
+
+            System.out.println(linesJ.length);
+            for (int j = 0; j < linesJ.length;) {
+                if ((!lines[i].isEmpty() && !lines[i].trim().equals(rId))) {
+                    i = writeNugnieRoomsToDb(br, lines, i, j);
+                    br.append("\n");
+                } else {
+                    i = i + 7;
+                }
+                j++;
+            }
+            System.out.println("Rooms were canceled");
+        }
+    }
+
+
+    private static int writeNugnieRoomsToDb(BufferedWriter br, String[] lines, int i, int
+            j) throws Exception {
+    //Room room1 = new Room(0,1,100, true, true, "02.05.2020", kievPlaza);
+        br.append(lines[i].trim());//room id
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//numbers of guests
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//price
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//breacfast included
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//pets allowed
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//date avaible from
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());//hotel
+        br.append(", ");
+        i++;
+
+        return i;
     }
 }

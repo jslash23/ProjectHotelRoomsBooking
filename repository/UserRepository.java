@@ -56,7 +56,7 @@ public class UserRepository {
         ArrayList<User> users = new ArrayList<>();
 
 
-        User user1 = new User(0, "", "", "", UserType.USER, false);
+        User user1 = new User(0, "", "", "", UserType.USER);
         //User user2 = new User(0, "", "", "", UserType.USER, false);
 
         users.add(user1);
@@ -72,30 +72,21 @@ public class UserRepository {
             for (int i = 1; i < lines.length; ) {
                 //пока не будет конца строки проходимся по всем стрингам
 
-                //validate fields UserName
-                if (!lines[i].isEmpty() && lines[i].trim().equals(user.getUserName())) {
                     user1.setUserName(user.getUserName());
-
-                }
-
                 //validate fields password
                 i++;
-                if (!lines[i].isEmpty() && lines[i].trim().equals(user.getPassword())) {
+
                     user1.setPassword(user.getPassword());
 
-                }
 
                 //validate fields Country
                 i++;
-                if (!lines[i].isEmpty() && lines[i].trim().equals(user.getCountry())) {
                     user1.setCountry(user.getCountry());
 
-                }
                 i++;
-                //validate fields UserType
-                if (!lines[i].isEmpty() && lines[i].trim().equals(user.getUserType().toString())) {
+
                     user1.setUserType(user.getUserType());
-                }
+
 
                         //если валидация сработала то запишем входные значения юзера в репозиторий
                         if ((user1.getUserName().equals(user.getUserName())) &&
@@ -123,11 +114,10 @@ public class UserRepository {
         //сгенерируем новый айдишник
         //2.запишем наш стринг в файл UserDb.txt
 
-        StringBuffer res = new StringBuffer();
+
         try (BufferedWriter br = new BufferedWriter(new FileWriter(userPath, true))) {
 
-            //Сгенерируем новый айдишник и запишем его в StringBuffer а
-            // StringBuffer запишется в userDb.txt
+
 
             try {
                 //сгенерируем айдишник и запишем его в файл
@@ -148,10 +138,6 @@ public class UserRepository {
                 br.append(user.getUserType().toString());
                 br.append(",");
 
-
-                br.append(String.valueOf(user.isRoomsReserved()));
-                br.append(",");
-
                 br.append("\n");
 
 
@@ -161,7 +147,7 @@ public class UserRepository {
         }
     }
 
-    private static Integer CreateId(Integer min, Integer max) {
+    public static Integer CreateId(Integer min, Integer max) {
         int diff = max - min;
         Random random = new Random();
         int i = random.nextInt(diff + 1);

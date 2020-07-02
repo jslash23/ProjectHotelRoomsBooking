@@ -1,6 +1,7 @@
 package Project.repository;
 
 import Project.model.*;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class OrderRepository {
     private static void bookRooms(long roomId, long userId, String dateFrom, String dateTo, String order) {
 
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(order))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(order, true))) {
 
             bufferedWriter.append(Long.toString(roomId));
             bufferedWriter.append(",");
@@ -23,7 +24,9 @@ public class OrderRepository {
             bufferedWriter.append(dateFrom);
             bufferedWriter.append(",");
             bufferedWriter.append(dateTo);
-            System.out.println("all writen");
+            bufferedWriter.append(",");
+            bufferedWriter.append("\n");
+            System.out.println("New orders booked");
         } catch (IOException e) {
             System.err.println("Can't write to file");
         }
@@ -36,8 +39,9 @@ public class OrderRepository {
 
     private static void cancelReserv(long roomId, long userId, String order) throws Exception {
         //найдем наши комнаты для отмены брони, удалим заказ
+
         //замапим данные из файла ОrderDb.txt
-        //в них найдем комнаты, пользователя и если есть удалим заказ этот заказ из файла orderDb.txt
+        //в них найдем комнаты, пользователя и если есть удалим  этот заказ из файла orderDb.txt
 
         //1.Считаем строку из текстового файла нашей БД (ОrderDb.txt)
         //2.Замапим данные в объект Order
@@ -68,7 +72,7 @@ public class OrderRepository {
 
     private static void writeToOrder(StringBuffer contentToWrite, long roomId, long userId, String orderPath) throws Exception {
         //Нужно записать  данные в OrderDb.txt
-        ArrayList<Order> orders = new ArrayList<>();
+       /* ArrayList<Order> orders = new ArrayList<>();
         Order order1 = new Order(0, new User(0, "", "", "", UserType.USER, false),
                 new Room(0, 0, 0, false, false, "",
                         new Hotel(0, "", "", "", "")), "", "", 0);
@@ -81,41 +85,78 @@ public class OrderRepository {
                 new Room(0, 0, 0, false, false, "",
                         new Hotel(0, "", "", "", "")), "", "", 0);
 
+        orders.add(order1);
+        orders.add(order2);*/
 
         StringBuffer res = new StringBuffer();
-        try (BufferedWriter br = new BufferedWriter(new FileWriter(orderPath,false))) {
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(orderPath, false))) {//append
+
 
             String convString = contentToWrite.toString();
+            String[] linesJ = convString.trim().split("\n");
             String[] lines = convString.trim().split(",");
+            String rId = (Long.toString(roomId));
+            String usId = (Long.toString(userId));
             int i = 0;
 
-            for (int j = 0; j < orders.size() - 1; j++) {
-
-                //validate fild id проверка на целые числа
-                try {
-                    if (!lines[i].isEmpty() && lines[i].trim().equals(roomId)) {
-                        i++;
-                    }
-                    if (!lines[i].isEmpty() && lines[i].trim().equals(userId)) {
+            System.out.println(linesJ.length);
+            for (int j = 0; j < linesJ.length; ) {
 
 
-                        res.append("");
-                        // deleteOrder(order/*roomId*/);
-                    }
-
-
-                } catch (Exception e) {
-                    System.err.println("There is no such order ");
+                if ((!lines[i].isEmpty() && !lines[i].trim().equals(rId)) && (!lines[i+1].isEmpty()
+                        && !lines[i+1].trim().equals(usId))) {
+                    i = writeNugnieOrdersToDb(/*orders,*/ br, lines, i, j);
+                    br.append("\n");
+                } else {
+                    i = i + 6;
                 }
-                i++;
-
+                j++;
             }
-        } catch (IOException e) {
-            System.err.println("Can't write to file");
+            System.out.println("Order was canceled");
         }
     }
 
+    private static int writeNugnieOrdersToDb(/*ArrayList<Order> orders,*/ BufferedWriter br, String[] lines, int i, int
+            j) throws Exception {
+
+        //orders.get(j).setId(Long.parseLong(lines[i].trim()));//trim("\n")
+
+        //br.append(Long.toString(orders.get(j).getId()));
+        br.append(lines[i].trim());
+        br.append(", ");
+        i++;
+
+        //записать параметры значений
+        /*orders.get(j).getUser().setId(Long.parseLong(lines[i].trim()));
+        br.append(Long.toString(orders.get(j).getUser().getId()));*/
+        br.append(lines[i].trim());
+        //нужно полностью прописывать параметры юзера или писать сокращенно
+        br.append(", ");
+        i++;
+
+        //Add date to to BufferedWriter br
+        br.append(lines[i].trim());
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());
+        br.append(", ");
+        i++;
+
+
+        //add date from to BufferedWriter br
+        br.append(lines[i].trim());
+        br.append(", ");
+        i++;
+
+        br.append(lines[i].trim());
+        br.append(", ");
+        i++;
+       return i;
+    }
 }
+
+
 
 
 

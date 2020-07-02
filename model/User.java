@@ -8,15 +8,15 @@ public class User {
     private String password;
     private String country;
     private Enum UserType;
-    private boolean RoomsReserved;
 
-    public User(long id, String userName, String password, String country, Enum userType, boolean roomsReserved) {
+
+    public User(long id, String userName, String password, String country, Enum userType) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.country = country;
         UserType = userType;
-        RoomsReserved = roomsReserved;
+
     }
 
     public long getId() {
@@ -59,13 +59,6 @@ public class User {
         UserType = userType;
     }
 
-    public boolean isRoomsReserved() {
-        return RoomsReserved;
-    }
-
-    public void setRoomsReserved(boolean roomsReserved) {
-        RoomsReserved = roomsReserved;
-    }
 
     @Override
     public String toString() {
@@ -75,7 +68,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", country='" + country + '\'' +
                 ", UserType=" + UserType +
-                ", RoomsReserved=" + RoomsReserved +
                 '}';
     }
 }
