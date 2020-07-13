@@ -229,7 +229,6 @@ for (int k = 0; k < 2  ; k++) {//у нас 2-ве записи в таблице
 
             System.out.println(linesJ.length);
             for (int j = 0; j < linesJ.length;) {
-                while (i < lines.length) {//предохранитель от переполнения массива i
                     if ((!lines[i].isEmpty() && !lines[i].trim().equals(hId))) {
                         i = writeNugnieHotelsToDb(br, lines, i, j);
                         br.append("\n");
@@ -237,7 +236,6 @@ for (int k = 0; k < 2  ; k++) {//у нас 2-ве записи в таблице
                         i = i + 5;
                     }
                     j++;
-                }
             }
             System.out.println("Hotels were canceled");
         }

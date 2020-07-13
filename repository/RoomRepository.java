@@ -268,7 +268,7 @@ public class RoomRepository {
         //2.запишем наш стринг в файл RoomDb.txt
 
         //StringBuffer res = new StringBuffer();
-       try (BufferedWriter br = new BufferedWriter(new FileWriter(pathRooms, true))) {
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(pathRooms, true))) {
 
             //Сгенерируем новый айдишник и запишем его в StringBuffer а
             // StringBuffer запишется в userDb.txt
@@ -282,7 +282,10 @@ public class RoomRepository {
                 br.append(Long.toString(id));//запишем новый id
                 br.append(", ");
 
-                br.append(Integer.toString(room.getNumbersOfGuests()));
+                String newRoom =  room.toString();  //////////////////////////
+                br.append(newRoom);   //////////////////////////////////////
+
+                /*br.append(Integer.toString(room.getNumbersOfGuests()));
                 br.append(", ");
 
                 br.append(String.valueOf(room.getPrice()));
@@ -299,7 +302,7 @@ public class RoomRepository {
                 br.append(", ");
 
                 br.append(Long.toString(room.getHotel().getId()));
-                br.append(", ");
+                br.append(", ");*/
                 br.append("\n");
 
 
@@ -310,7 +313,6 @@ public class RoomRepository {
 
         }
     }
-
 
 
     public static void deleteRoom(long roomId, String path, UserType usType) throws Exception {
@@ -338,22 +340,36 @@ public class RoomRepository {
     }
 
 
-
     private static void writeToRoom(StringBuffer contentToWrite, long roomId, String roomPath) throws Exception {
         try (BufferedWriter br = new BufferedWriter(new FileWriter(roomPath, false))) {//append
 
 
             String convString = contentToWrite.toString();
             String[] linesJ = convString.trim().split("\n");
+
+
             String[] lines = convString.trim().split(",");
             String rId = (Long.toString(roomId));
 
-            int i = 0;
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            for (String ln : linesJ) {
+                if (!ln.contains(rId)) {
+                    br.append(ln);
+                }
+            }
+        }
+    }
+
+}
+
+
+           /* int i = 0;
 
             System.out.println(linesJ.length);
             for (int j = 0; j < linesJ.length;) {
                 if ((!lines[i].isEmpty() && !lines[i].trim().equals(rId))) {
                     i = writeNugnieRoomsToDb(br, lines, i, j);
+
                     br.append("\n");
                 } else {
                     i = i + 7;
@@ -362,10 +378,10 @@ public class RoomRepository {
             }
             System.out.println("Rooms were canceled");
         }
-    }
+    }*/
 
 
-    private static int writeNugnieRoomsToDb(BufferedWriter br, String[] lines, int i, int
+    /*private static int writeNugnieRoomsToDb(BufferedWriter br, String[] lines, int i, int
             j) throws Exception {
     //Room room1 = new Room(0,1,100, true, true, "02.05.2020", kievPlaza);
         br.append(lines[i].trim());//room id
@@ -397,5 +413,4 @@ public class RoomRepository {
         i++;
 
         return i;
-    }
-}
+    }*/
